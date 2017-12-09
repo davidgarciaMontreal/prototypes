@@ -3,9 +3,9 @@ package com.prototypes.httpclient;
 import java.util.Collections;
 
 public class HttpClient {
-    public static int SUC_CODE = 0;
+    private static final int SUC_CODE = 0;
 
-    public final static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         System.out.println("Init http client");
 
