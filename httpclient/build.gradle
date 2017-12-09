@@ -1,4 +1,4 @@
-group 'com.prototype.httpclient'
+group 'com.prototypes.httpclient'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -17,7 +17,7 @@ dependencies {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'com.prototype.httpclient.HttpClient'
+                'Main-Class': 'com.prototypes.httpclient.HttpClient'
         )
     }
 }
