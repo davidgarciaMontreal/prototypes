@@ -1,7 +1,8 @@
 # prototypes
 Android APP Java Development
 
-GPG key:
+## Public GPG key:
+```
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQENBFosDQIBCACmrQISgQ1y6wMNeePUpB12x27cb7EF7R/wWU0d38XkPcAY2jVZ
@@ -33,3 +34,4 @@ KximGbQaDScNVDZsNphCJsOpMIRz7C2hYH1xQ37EFvsD6c/kwNXYjLfNjjcb4NK5
 iha9eMCbpovgR7g4dg==
 =cboG
 -----END PGP PUBLIC KEY BLOCK-----
+```
