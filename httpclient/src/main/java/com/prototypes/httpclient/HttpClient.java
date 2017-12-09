@@ -1,7 +1,11 @@
 package com.prototypes.httpclient;
 
-import org.apache.commons.cli.*;
-
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +32,7 @@ public class HttpClient {
 
         System.out.println("Init http client");
         for (String url : myArgs) {
-            MyHttpClient cl = new MyHttpClient("https://www.google.com");
+            MyHttpClient cl = new MyHttpClient(url);
             String responseBody = cl.getBody();
             String header_stdout = String.join("", Collections.nCopies(100, "#"));
             System.out.println(header_stdout);
