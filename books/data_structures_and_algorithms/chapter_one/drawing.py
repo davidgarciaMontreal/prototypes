@@ -1,6 +1,7 @@
 import turtle
 import graphics
 import tkinter
+import tkinter.filedialog
 import xml
 
 class DrawingApplication(tkinter.Frame):
@@ -95,6 +96,8 @@ class DrawingApplication(tkinter.Frame):
         fileMenu.add_command(label="Load Into...", command=addToFile)
 
         def write(filename):
+            if not filename:
+                return
             file = open(filename, "w")
             file.write('< ?xml version = "1.0" encoding = "UTF-8" standalone = "no" ? > \n')
             file.write('<GraphicsCommands>\n')
