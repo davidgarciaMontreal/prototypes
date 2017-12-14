@@ -73,3 +73,6 @@ class PyList:
     def __iter__(self):
         for c in self.items:
             yield c
+
+    def removeLast(self):
+        self.items = self.items[:-1]

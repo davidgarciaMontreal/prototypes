@@ -1,7 +1,7 @@
 import turtle
 import graphics
 import tkinter
-
+import xml
 
 class DrawingApplication(tkinter.Frame):
 
@@ -20,26 +20,92 @@ class DrawingApplication(tkinter.Frame):
         fileMenu = tkinter.Menu(bar, tearoff=0)
 
         def newWindow():
-            pass
+            theTurtle.clear()
+            theTurtle.penup()
+            theTurtle.goto(0, 0)
+            theTurtle.pendown()
+            screen.update()
+            screen.listen()
+            self.graphicsCommands = graphics.PyList()
+
         fileMenu.add_command(label="New", command=newWindow)
 
         def parse(filename):
-            pass
-        def loadFile():
-            pass
+            xmldoc = xml.dom.minidom.parse(filename)
+            graphicsCommandsElement = xmldoc.getElementsByTagName("GraphicsCommands")[0]
+            graphicsCommands = graphicsCommandsElement.getElementsByTagName("Command")
 
+            for commandElement in graphicsCommands:
+                print(type(commandElement))
+                command = commandElement.firstChild.data.strip()
+                attr = commandElement.attributes
+
+                if command == "goto":
+                    x = float(attr["x"].value)
+                    y = float(attr["y"].value)
+                    width = float(attr["width"].value)
+                    color = attr["color"].value.strip()
+                    cmd = graphics.GoToCommand(x, y, width, color)
+                elif command == "circle":
+                    radius = float(attr["radius"].value)
+                    width = float(attr["width"].value)
+                    color = attr["color"].value.strip()
+                    cmd = graphics.CircleCommand(radius, width, color)
+                elif command == "beginfill":
+                    color = attr["color"].value.strip()
+                    cmd = graphics.BeginFillCommand(color)
+                elif command == "endfill":
+                    cmd = graphics.EndFillCommand()
+                elif command == "penup":
+                    cmd = graphics.PenUpCommand()
+                elif command == "pendown":
+                    cmd = graphics.PenUpCommand()
+                else:
+                    raise RuntimeError("Unknown command found in file: {}".format(command))
+            self.graphicsCommands.append(cmd)
+
+        def loadFile():
+            filename = tkinter.filedialog.askopenfilename(title="Select a Graphics File")
+            newWindow()
+            self.graphicsCommands = graphics.PyList()
+            parse(filename)
+            for cmd in self.graphicsCommands:
+                cmd.draw(theTurtle)
+            screen.update()
         fileMenu.add_command(label="Load...", command=loadFile)
 
         def addToFile():
-            pass
-
+            filename = tkinter.filedialog.askopenfilename(title="Select a Graphics File")
+            theTurtle.penup()
+            theTurtle.goto(0, 0)
+            theTurtle.pendown()
+            theTurtle.pencolor("#000000")
+            theTurtle.fillcolor("#000000")
+            cmd = graphics.PenUpCommand()
+            self.graphicsCommands.append(cmd)
+            cmd = graphics.GoToCommand(0, 0, 1, "#000000")
+            self.graphicsCommands.append(cmd)
+            cmd = graphics.PenDownCommand()
+            self.graphicsCommands.append(cmd)
+            screen.update()
+            parse(filename)
+            for cmd in self.graphicsCommands:
+                cmd.draw(theTurtle)
+            screen.update()
         fileMenu.add_command(label="Load Into...", command=addToFile)
 
         def write(filename):
-            pass
+            file = open(filename, "w")
+            file.write('< ?xml version = "1.0" encoding = "UTF-8" standalone = "no" ? > \n')
+            file.write('<GraphicsCommands>\n')
+            for cmd in self.graphicsCommands:
+                file.write('    ' + str(cmd)+ "\n")
+            file.write('</GraphicsCommands>\n')
+            file.close()
 
         def saveFile():
-            pass
+            filename = tkinter.filedialog.asksaveasfilename(title="Save Picture As...")
+            write(filename)
         fileMenu.add_command(label="Save As...", command=saveFile)
 
         fileMenu.add_command(label="Exit", command=self.master.quit)
@@ -76,10 +142,14 @@ class DrawingApplication(tkinter.Frame):
         radiusEntry.pack()
 
         def circleHandler():
-            pass
-
+            cmd = graphics.CircleCommand(float(radiusSize.get()), float(widthSize.get()), penColor.get())
+            cmd.draw(theTurtle)
+            self.graphicsCommands.append(cmd)
+            screen.update()
+            screen.listen()
         circleButton = tkinter.Button(sideBar, text="Draw Circle", command=circleHandler)
         circleButton.pack(fill=tkinter.BOTH)
+
         screen.colormode(255)
         penLabel = tkinter.Label(sideBar, text="Pen Color")
         penLabel.pack()
@@ -89,10 +159,13 @@ class DrawingApplication(tkinter.Frame):
         penColor.set("#000000")
 
         def getPenColor():
-            pass
+            color = tkinter.colorchooser.askcolor()
+            if color is not None:
+                penColor.set(str(color)[-9:-2])
 
         penColorButton = tkinter.Button(sideBar, text="Pick Pen Color", command=getPenColor)
         penColorButton.pack(fill=tkinter.BOTH)
+
         fillLabel = tkinter.Label(sideBar, text="Fill Color")
         fillLabel.pack()
         fillColor = tkinter.StringVar()
@@ -101,19 +174,25 @@ class DrawingApplication(tkinter.Frame):
         fillColor.set("#000000")
 
         def getFillColor():
-            pass
-
+            color = tkinter.colorchooser.askcolor()
+            if color is not None:
+                fillColor.set(str(color)[-9:-2])
         fillColorButton = \
             tkinter.Button(sideBar, text="Pick Fill Color", command=getFillColor)
         fillColorButton.pack(fill=tkinter.BOTH)
 
         def beginFillHandler():
-            pass
+            cmd = graphics.BeginFillCommand(fillColor.get())
+            cmd.draw(theTurtle)
+            self.graphicsCommands.append(cmd)
 
-        beginFillButton = tkinter.Button(sideBar, text="Begin Fill", command=endFillHandler)
+        beginFillButton = tkinter.Button(sideBar, text="Begin Fill", command=beginFillHandler)
         beginFillButton.pack(fill=tkinter.BOTH)
+
         def endFillHandler():
-            pass
+            cmd = graphics.EndFillCommand()
+            cmd.draw(theTurtle)
+            self.graphicsCommands.append(cmd)
         endFillButton = tkinter.Button(sideBar, text="End Fill", command=endFillHandler)
         endFillButton.pack(fill=tkinter.BOTH)
 
@@ -121,27 +200,47 @@ class DrawingApplication(tkinter.Frame):
         penLabel.pack()
 
         def penUpHandler():
-            pass
+            cmd = graphics.PenUpCommand()
+            cmd.draw(theTurtle)
+            penLabel.configure(text="Pen Is Up")
+            self.graphicsCommands.append(cmd)
         penUpButton = tkinter.Button(sideBar, text="Pen Up", command=penUpHandler)
         penUpButton.pack()
 
         def penDownHandler():
-            pass
+            cmd = graphics.PenDownCommand()
+            cmd.draw(theTurtle)
+            penLabel.configure(text="Pen Is Down")
+            self.graphicsCommands.append(cmd)
         penDownButton = tkinter.Button(sideBar, text="Pen Down", command=penDownHandler)
         penDownButton.pack()
 
         def clickHandler(x, y):
-            pass
-
-        screen.onclik(clickHandler)
+            cmd = graphics.GoToCommand(x, y, widthSize.get(), penColor.get())
+            cmd.draw(theTurtle)
+            self.graphicsCommands.append(cmd)
+            screen.update()
+            screen.listen()
+        screen.onclick(clickHandler)
 
         def dragHandler(x, y):
-            pass
+            cmd = graphics.GoToCommand(x, y, widthSize.get(), penColor.get())
+            cmd.draw(theTurtle)
+            self.graphicsCommands.append(cmd)
+            screen.update()
+            screen.listen()
 
         theTurtle.ondrag(dragHandler)
 
         def undoHandler():
-            pass
+            if len(self.graphicsCommands) > 0:
+                self.graphicsCommands.removeLast()
+                theTurtle.clear()
+                theTurtle.penup()
+                theTurtle.goto(0, 0)
+                theTurtle.pendown()
+                for cmd in self.graphicsCommands:
+                    cmd.draw(theTurtle)
         screen.onkeypress(undoHandler, "u")
         screen.listen()
 
