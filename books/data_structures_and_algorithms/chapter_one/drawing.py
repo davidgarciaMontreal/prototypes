@@ -4,6 +4,7 @@ import tkinter
 import tkinter.filedialog
 import xml
 
+
 class DrawingApplication(tkinter.Frame):
 
     def __init__(self, master=None):
@@ -18,7 +19,6 @@ class DrawingApplication(tkinter.Frame):
         self.theTurtle = turtle.RawTurtle(canvas)
         self.screen = self.theTurtle.getscreen()
         self.buildWindow()
-
 
     def buildWindow(self):
         bar = self.bar
@@ -37,8 +37,10 @@ class DrawingApplication(tkinter.Frame):
 
         def parse(filename):
             xmldoc = xml.dom.minidom.parse(filename)
-            graphicsCommandsElement = xmldoc.getElementsByTagName("GraphicsCommands")[0]
-            graphicsCommands = graphicsCommandsElement.getElementsByTagName("Command")
+            graphicsCommandsElement = xmldoc.\
+                getElementsByTagName("GraphicsCommands")[0]
+            graphicsCommands = graphicsCommandsElement.getElementsByTagName(
+                "Command")
 
             for commandElement in graphicsCommands:
                 print(type(commandElement))
@@ -66,11 +68,13 @@ class DrawingApplication(tkinter.Frame):
                 elif command == "pendown":
                     cmd = graphics.PenUpCommand()
                 else:
-                    raise RuntimeError("Unknown command found in file: {}".format(command))
+                    raise RuntimeError(
+                        "Unknown command found in file: {}".format(command))
             self.graphicsCommands.append(cmd)
 
         def loadFile():
-            filename = tkinter.filedialog.askopenfilename(title="Select a Graphics File")
+            filename = tkinter.filedialog.askopenfilename(
+                title="Select a Graphics File")
             newWindow()
             self.graphicsCommands = graphics.PyList()
             parse(filename)
@@ -80,7 +84,8 @@ class DrawingApplication(tkinter.Frame):
         fileMenu.add_command(label="Load...", command=loadFile)
 
         def addToFile():
-            filename = tkinter.filedialog.askopenfilename(title="Select a Graphics File")
+            filename = tkinter.filedialog.askopenfilename(
+                title="Select a Graphics File")
             theTurtle.penup()
             theTurtle.goto(0, 0)
             theTurtle.pendown()
@@ -103,15 +108,18 @@ class DrawingApplication(tkinter.Frame):
             if not filename:
                 return
             file = open(filename, "w")
-            file.write('< ?xml version = "1.0" encoding = "UTF-8" standalone = "no" ? > \n')
+            msg = '< ?xml version = "1.0" encoding = ' \
+                  '"UTF-8" standalone = "no" ? > \n'
+            file.write(msg)
             file.write('<GraphicsCommands>\n')
             for cmd in self.graphicsCommands:
-                file.write('    ' + str(cmd)+ "\n")
+                file.write('    ' + str(cmd) + "\n")
             file.write('</GraphicsCommands>\n')
             file.close()
 
         def saveFile():
-            filename = tkinter.filedialog.asksaveasfilename(title="Save Picture As...")
+            filename = tkinter.filedialog.asksaveasfilename(
+                title="Save Picture As...")
             write(filename)
         fileMenu.add_command(label="Save As...", command=saveFile)
 
@@ -145,12 +153,15 @@ class DrawingApplication(tkinter.Frame):
         radiusEntry.pack()
 
         def circleHandler():
-            cmd = graphics.CircleCommand(float(radiusSize.get()), float(widthSize.get()), penColor.get())
+            cmd = graphics.CircleCommand(
+                float(radiusSize.get()), float(widthSize.get()),
+                penColor.get())
             cmd.draw(theTurtle)
             self.graphicsCommands.append(cmd)
             screen.update()
             screen.listen()
-        circleButton = tkinter.Button(sideBar, text="Draw Circle", command=circleHandler)
+        circleButton = tkinter.Button(
+            sideBar, text="Draw Circle", command=circleHandler)
         circleButton.pack(fill=tkinter.BOTH)
 
         screen.colormode(255)
@@ -166,7 +177,8 @@ class DrawingApplication(tkinter.Frame):
             if color is not None:
                 penColor.set(str(color)[-9:-2])
 
-        penColorButton = tkinter.Button(sideBar, text="Pick Pen Color", command=getPenColor)
+        penColorButton = tkinter.Button(
+            sideBar, text="Pick Pen Color", command=getPenColor)
         penColorButton.pack(fill=tkinter.BOTH)
 
         fillLabel = tkinter.Label(sideBar, text="Fill Color")
@@ -181,7 +193,8 @@ class DrawingApplication(tkinter.Frame):
             if color is not None:
                 fillColor.set(str(color)[-9:-2])
         fillColorButton = \
-            tkinter.Button(sideBar, text="Pick Fill Color", command=getFillColor)
+            tkinter.Button(sideBar, text="Pick Fill Color",
+                           command=getFillColor)
         fillColorButton.pack(fill=tkinter.BOTH)
 
         def beginFillHandler():
@@ -189,14 +202,16 @@ class DrawingApplication(tkinter.Frame):
             cmd.draw(theTurtle)
             self.graphicsCommands.append(cmd)
 
-        beginFillButton = tkinter.Button(sideBar, text="Begin Fill", command=beginFillHandler)
+        beginFillButton = tkinter.Button(
+            sideBar, text="Begin Fill", command=beginFillHandler)
         beginFillButton.pack(fill=tkinter.BOTH)
 
         def endFillHandler():
             cmd = graphics.EndFillCommand()
             cmd.draw(theTurtle)
             self.graphicsCommands.append(cmd)
-        endFillButton = tkinter.Button(sideBar, text="End Fill", command=endFillHandler)
+        endFillButton = tkinter.Button(
+            sideBar, text="End Fill", command=endFillHandler)
         endFillButton.pack(fill=tkinter.BOTH)
 
         penLabel = tkinter.Label(sideBar, text="Pen is Up")
@@ -207,7 +222,8 @@ class DrawingApplication(tkinter.Frame):
             cmd.draw(theTurtle)
             penLabel.configure(text="Pen Is Up")
             self.graphicsCommands.append(cmd)
-        penUpButton = tkinter.Button(sideBar, text="Pen Up", command=penUpHandler)
+        penUpButton = tkinter.Button(
+            sideBar, text="Pen Up", command=penUpHandler)
         penUpButton.pack()
 
         def penDownHandler():
@@ -215,7 +231,8 @@ class DrawingApplication(tkinter.Frame):
             cmd.draw(theTurtle)
             penLabel.configure(text="Pen Is Down")
             self.graphicsCommands.append(cmd)
-        penDownButton = tkinter.Button(sideBar, text="Pen Down", command=penDownHandler)
+        penDownButton = tkinter.Button(
+            sideBar, text="Pen Down", command=penDownHandler)
         penDownButton.pack()
 
         def clickHandler(x, y):
@@ -253,6 +270,7 @@ def main():
     drawingApp = DrawingApplication(root)
     drawingApp.mainloop()
     print("Program Execution Completed.")
+
 
 if __name__ == "__main__":
     main()
