@@ -9,16 +9,20 @@ class DrawingApplication(tkinter.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.pack()
-        self.buildWindow()
         self.graphicsCommands = graphics.PyList()
+        self.master.title("Draw")
+        self.bar = tkinter.Menu(self.master)
+        self.fileMenu = tkinter.Menu(self.bar, tearoff=0)
+        canvas = tkinter.Canvas(self, width=600, height=600)
+        canvas.pack(side=tkinter.LEFT)
+        self.theTurtle = turtle.RawTurtle(canvas)
+        self.screen = self.theTurtle.getscreen()
+        self.buildWindow()
 
 
     def buildWindow(self):
-
-        self.master.title("Draw")
-
-        bar = tkinter.Menu(self.master)
-        fileMenu = tkinter.Menu(bar, tearoff=0)
+        bar = self.bar
+        fileMenu = self.fileMenu
 
         def newWindow():
             theTurtle.clear()
@@ -116,17 +120,13 @@ class DrawingApplication(tkinter.Frame):
         bar.add_cascade(label="File", menu=fileMenu)
 
         self.master.config(menu=bar)
-
-        canvas = tkinter.Canvas(self, width=600, height=600)
-        canvas.pack(side=tkinter.LEFT)
-
-        theTurtle = turtle.RawTurtle(canvas)
-        theTurtle.shape("circle")
-        screen = theTurtle.getscreen()
+        theTurtle = self.theTurtle
+        screen = self.screen
 
         screen.tracer(0)
 
         sideBar = tkinter.Frame(self, padx=5, pady=5)
+        self.sideBar = sideBar
         sideBar.pack(side=tkinter.RIGHT, fill=tkinter.BOTH)
 
         pointLabel = tkinter.Label(sideBar, text="Width")
@@ -253,53 +253,6 @@ def main():
     drawingApp = DrawingApplication(root)
     drawingApp.mainloop()
     print("Program Execution Completed.")
-
-
-
-def main1():
-    filename = input("Please enter drawing instructions: ")
-    t = turtle.Turtle()
-    screen = t.getscreen()
-    screen.title("Welcome to the turtle zoo!")
-
-    file = open(filename,"r")
-    graphicsCommands = graphics.PyList()
-
-    for line in file:
-        text = line.strip()
-        commandList = text.split(",")
-        command = commandList[0]
-        if command == "goto":
-            x = float(commandList[1])
-            y = float(commandList[2])
-            width = float(commandList[3])
-            color = commandList[4].strip()
-            cmd = graphics.GoToCommand(x, y, width, color)
-        elif command == "circle":
-            radius = float(commandList[1])
-            width = float(commandList[2])
-            color = commandList[3].strip()
-            cmd = graphics.CircleCommand(radius, width, color)
-        elif command == "beginfill":
-            color = commandList[1].strip()
-            cmd = graphics.BeginFillCommand(color)
-        elif command == "endfill":
-            cmd = graphics.EndFillCommand()
-        elif command == "penup":
-            cmd = graphics.PenUpCommand()
-        elif command == "pendown":
-            cmd = graphics.PenUpCommand()
-        else:
-            print("Unknown command found in file: {}".format(command))
-        graphicsCommands.appen(cmd)
-    for cmd in graphicsCommands:
-        cmd.draw(t)
-
-    file.close()
-    t.ht() # hide the turtle
-    screen.exitonclick()
-    print("Program Execution Completed")
-
 
 if __name__ == "__main__":
     main()
