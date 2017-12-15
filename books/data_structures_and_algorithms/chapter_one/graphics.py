@@ -18,7 +18,7 @@ class GoToCommand:
 
 class CircleCommand:
 
-    def __init(self, radius, width=1, color="black"):
+    def __init__(self, radius, width=1, color="black"):
         self.radius = radius
         self.width = width
         self.color = color
