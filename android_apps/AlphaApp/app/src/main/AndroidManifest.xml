@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.industries.garcam.alphaapp">
 
+    <uses-permission android:name="android.permission.SET_ALARM" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,6 +18,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MoreInfoNotification"
+            android:label="More Data on Notification"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVIY"
+                android:value=".MainActivy" />
+        </activity>
+
+        <receiver android:name=".AlertReceiver"/>
+
     </application>
 
 </manifest>

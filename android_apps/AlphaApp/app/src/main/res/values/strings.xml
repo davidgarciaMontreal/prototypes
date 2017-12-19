@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">AlphaApp</string>
+    <string name="package_name_log">com.industries.garcam.AlphaApp</string>
+    <string name="text_view_text">Hello from Sceska (:</string>
+    <string name="app_label_name"></string>
+    <string name="button_text_00">New Button</string>
+    <string name="show_notification">SHOW NOTIFICATION</string>
+    <string name="stop_notification">STOP NOTIFICATION</string>
+    <string name="alert_in_5_secs">ALERT IN 5 SECS</string>
+    <string name="title_activity_more_info_notification">MoreInfoNotification</string>
+    <string name="main2_info">Info on the notification</string>
 </resources>
