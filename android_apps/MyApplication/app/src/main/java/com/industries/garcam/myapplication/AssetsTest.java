@@ -21,7 +21,7 @@ public class AssetsTest extends AppCompatActivity {
         AssetManager assetManager =  this.getAssets();
         InputStream inputStream = null;
         try {
-            inputStream = assetManager.open("myawesometext.txt");
+            inputStream = assetManager.open("text/myawesometext.txt");
             String text = loadTextFile(inputStream);
             textView.setText(text);
         } catch (IOException e) {

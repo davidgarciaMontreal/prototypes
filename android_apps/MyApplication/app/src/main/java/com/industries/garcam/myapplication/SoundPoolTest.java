@@ -2,6 +2,7 @@ package com.industries.garcam.myapplication;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -26,11 +27,15 @@ public class SoundPoolTest extends AppCompatActivity implements OnTouchListener 
         textView.setText("Hi Sceska... please touch the screen to listen to a great music piece (:");
         setContentView(textView);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        soundPool = new SoundPool(20, AudioManager.STREAM_MUSIC, 0);
+        AudioAttributes aa = new AudioAttributes.Builder()
+                .setFlags(AudioAttributes.USAGE_GAME)
+                .build();
+        soundPool = new SoundPool.Builder().setMaxStreams(20).setAudioAttributes(aa).build();
+        //soundPool = new SoundPool(20, AudioManager.STREAM_MUSIC, 0);
 
         try {
             AssetManager assetManager = this.getAssets();
-            AssetFileDescriptor descriptor = assetManager.openFd("explosion-02.ogg");
+            AssetFileDescriptor descriptor = assetManager.openFd("music/explosion-02.ogg");
             explosionId = soundPool.load(descriptor, 1);
         } catch (IOException e) {
             textView.setText("Couldn't load sound effect from asset, "

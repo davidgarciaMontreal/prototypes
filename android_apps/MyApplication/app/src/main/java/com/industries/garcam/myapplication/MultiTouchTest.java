@@ -44,7 +44,7 @@ public class MultiTouchTest extends AppCompatActivity implements OnTouchListener
 
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction() & MotionEvent.ACTION_MASK;
-        int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_ID_MASK) >> MotionEvent.ACTION_POINTER_ID_SHIFT;
+        int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
         int pointerCount = event.getPointerCount();
         for (int i = 0; i < 10; i++) {
             if (i >= pointerCount) {

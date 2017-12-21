@@ -8,13 +8,21 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 
 public class AccelerometerTest extends AppCompatActivity implements SensorEventListener {
     TextView textView;
     StringBuilder builder = new StringBuilder();
+    int screenRotation;
+    @Override
+    public void onResume() {
+        super.onResume();
+        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        screenRotation = windowManager.getDefaultDisplay().getRotation();
 
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,15 +43,26 @@ public class AccelerometerTest extends AppCompatActivity implements SensorEventL
     }
 
     public void onSensorChanged(SensorEvent event) {
+        final int[] as = ACCELEROMETER_AXIS_SWAP[screenRotation];
+        float screenX = (float)as[0] * event.values[as[2]];
+        float screenY = (float)as[1] * event.values[as[3]];
+        float screenZ = event.values[2];
+        // use screenX, screenY, and screenZ as your accelerometer values now!
         builder.setLength(0);
         builder.append("x: ");
-        builder.append(event.values[0]);
+        builder.append(screenX);
         builder.append(", y: ");
-        builder.append(event.values[1]);
+        builder.append(screenY);
         builder.append(", z: ");
-        builder.append(event.values[2]);
+        builder.append(screenZ);
         textView.setText(builder.toString());
     }
+
+    static final int ACCELEROMETER_AXIS_SWAP[][] = {
+            {1, -1, 0, 1}, // ROTATION_0
+            {-1, -1, 1, 0}, // ROTATION_90
+            {-1, 1, 0, 1}, // ROTATION_180
+            {1, 1, 1, 0}}; // ROTATION_270
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // nothing to do here
