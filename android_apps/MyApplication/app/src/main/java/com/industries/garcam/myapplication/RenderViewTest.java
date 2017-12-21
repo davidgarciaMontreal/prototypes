@@ -11,9 +11,9 @@ import android.view.WindowManager;
 import java.util.Random;
 
 public class RenderViewTest extends AppCompatActivity {
-    class RenderView extends View {
-        Random rand = new Random();
 
+    class RenderView extends View  {
+        Random rand = new Random();
         public RenderView(Context context) {
             super(context);
         }
@@ -22,6 +22,7 @@ public class RenderViewTest extends AppCompatActivity {
             canvas.drawRGB(rand.nextInt(256), rand.nextInt(256),
                     rand.nextInt(256));
             invalidate();
+
         }
     }
 

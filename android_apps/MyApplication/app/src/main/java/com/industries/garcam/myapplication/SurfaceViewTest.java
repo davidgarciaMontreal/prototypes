@@ -13,6 +13,7 @@ import android.view.WindowManager;
 public class SurfaceViewTest extends AppCompatActivity {
     FastRenderView renderView;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -22,14 +23,17 @@ public class SurfaceViewTest extends AppCompatActivity {
         setContentView(renderView);
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
         renderView.resume();
     }
 
+    @Override
     protected void onPause() {
         super.onPause();
         renderView.pause();
+        //Surface and lock/unlock will be destroyed after this method returns
     }
 
     class FastRenderView extends SurfaceView implements Runnable {

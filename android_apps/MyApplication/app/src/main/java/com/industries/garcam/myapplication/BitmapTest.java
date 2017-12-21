@@ -24,16 +24,16 @@ public class BitmapTest extends AppCompatActivity {
 
         public RenderView(Context context) {
             super(context);
-
+            String fileName = "art/bobrgb888.png";
             try {
                 AssetManager assetManager = context.getAssets();
-                InputStream inputStream = assetManager.open("bobrgb888.png");
+                InputStream inputStream = assetManager.open(fileName);
                 bob565 = BitmapFactory.decodeStream(inputStream);
                 inputStream.close();
                 Log.d("BitmapText",
                         "bobrgb888.png format: " + bob565.getConfig());
 
-                inputStream = assetManager.open("bobargb8888.png");
+                inputStream = assetManager.open(fileName);
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inPreferredConfig = Bitmap.Config.ARGB_4444;
                 bob4444 = BitmapFactory

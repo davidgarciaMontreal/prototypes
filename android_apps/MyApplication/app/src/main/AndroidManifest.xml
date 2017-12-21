@@ -6,7 +6,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <!-- hardwareAccelerated https://android-developers.googleblog.com/2011/03/android-30-hardware-acceleration.html-->
+
     <application
+    android:hardwareAccelerated="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
