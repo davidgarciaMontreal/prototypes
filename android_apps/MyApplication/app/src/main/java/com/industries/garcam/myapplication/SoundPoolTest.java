@@ -43,6 +43,16 @@ public class SoundPoolTest extends AppCompatActivity implements OnTouchListener 
         }
     }
 
+    /**
+     * Dispatch onPause() to fragments.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        soundPool.unload(explosionId);
+    }
+
+
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (explosionId != -1) {
